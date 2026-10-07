@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Walmart Sales Analysis 2010–2012</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+:root{--bg:#f4f6fa;--card:#fff;--ink:#14213d;--mute:#5b6784;--line:#dde3ee;--blue:#0071ce;--gold:#e8a900;--grid:#e6ebf4;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1626;--card:#16213a;--ink:#e8edf8;--mute:#9aa7c4;--line:#27334f;--blue:#4da3ff;--gold:#ffc83d;--grid:#233049}}
+:root[data-theme="dark"]{--bg:#0e1626;--card:#16213a;--ink:#e8edf8;--mute:#9aa7c4;--line:#27334f;--blue:#4da3ff;--gold:#ffc83d;--grid:#233049}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1080px;margin:0 auto;padding:28px 18px 48px}
+h1{font-size:28px;line-height:1.2;margin:0 0 6px;font-weight:600}
+.sub{color:var(--mute);margin:0 0 22px;max-width:62ch}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.kpi b{display:block;font-size:24px;font-weight:600}.kpi span{color:var(--mute);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px}
+.card h2{font-size:16px;margin:0 0 2px;font-weight:600}.card p{margin:0 0 10px;color:var(--mute);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.grid .card{margin:0}
+.box{position:relative;height:260px}.hero .box{height:300px}
+ul{margin:0;padding-left:18px}li{margin:6px 0;max-width:80ch}
+footer{color:var(--mute);font-size:12px;margin-top:18px}
+</style></head><body><main>
+<h1>Christmas week drives the Walmart year</h1>
+<p class="sub">Weekly sales across 45 stores and 81 departments, Feb 2010 to Oct 2012. Built with SQL on the Kaggle Walmart Recruiting dataset.</p>
+<div class="kpis">
+<div class="kpi"><b>$6.74B</b><span>Total sales in the data</span></div>
+<div class="kpi"><b>$80.9M</b><span>Best week (24 Dec 2010)</span></div>
+<div class="kpi"><b>+7%</b><span>Holiday-week lift per dept</span></div>
+<div class="kpi"><b>+2.5%</b><span>Feb–Oct growth, 2012 vs 2010</span></div>
+</div>
+<section class="card hero"><h2>Weekly sales, all stores</h2><p>The two tallest peaks are the weeks before Christmas, which the dataset does not flag as holidays.</p><div class="box"><canvas id="c1"></canvas></div></section>
+<div class="grid">
+<section class="card"><h2>Average weekly sales by month</h2><p>$M per week. November and December lead.</p><div class="box"><canvas id="c2"></canvas></div></section>
+<section class="card"><h2>Store type: normal vs holiday weeks</h2><p>$K per store-department-week. Type C sees no lift.</p><div class="box"><canvas id="c3"></canvas></div></section>
+<section class="card"><h2>Top 8 departments by total sales</h2><p>$M, 2010–2012.</p><div class="box"><canvas id="c4"></canvas></div></section>
+<section class="card"><h2>Most holiday-sensitive departments</h2><p>% sales lift in flagged holiday weeks.</p><div class="box"><canvas id="c5"></canvas></div></section>
+</div>
+<section class="card" style="margin-top:14px"><h2>Key insights</h2><ul>
+<li>Sales peak in the weeks before Christmas. The flagged "Christmas" week (31 Dec) is a post-holiday dip, so the holiday flag understates the real peak.</li>
+<li>Thanksgiving is the strongest flagged holiday, about 40% above a normal week.</li>
+<li>Type A stores sell the most per department-week ($20.1K), but small Type C stores earn the most per sq ft.</li>
+<li>Markdowns have a weak link to sales (correlation 0.11). Temperature, fuel price, CPI and unemployment barely move sales.</li>
+<li>Stock and staff for November and December first. Departments 72, 6 and 18 need the most holiday planning.</li>
+</ul></section>
+<footer>Data: Kaggle Walmart Recruiting – Store Sales Forecasting. 421,570 weekly records. Negative sales rows (1,285) are kept as returns.</footer>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const D={"wk": [["2010-02-05", "2010-02-12", "2010-02-19", "2010-02-26", "2010-03-05", "2010-03-12", "2010-03-19", "2010-03-26", "2010-04-02", "2010-04-09", "2010-04-16", "2010-04-23", "2010-04-30", "2010-05-07", "2010-05-14", "2010-05-21", "2010-05-28", "2010-06-04", "2010-06-11", "2010-06-18", "2010-06-25", "2010-07-02", "2010-07-09", "2010-07-16", "2010-07-23", "2010-07-30", "2010-08-06", "2010-08-13", "2010-08-20", "2010-08-27", "2010-09-03", "2010-09-10", "2010-09-17", "2010-09-24", "2010-10-01", "2010-10-08", "2010-10-15", "2010-10-22", "2010-10-29", "2010-11-05", "2010-11-12", "2010-11-19", "2010-11-26", "2010-12-03", "2010-12-10", "2010-12-17", "2010-12-24", "2010-12-31", "2011-01-07", "2011-01-14", "2011-01-21", "2011-01-28", "2011-02-04", "2011-02-11", "2011-02-18", "2011-02-25", "2011-03-04", "2011-03-11", "2011-03-18", "2011-03-25", "2011-04-01", "2011-04-08", "2011-04-15", "2011-04-22", "2011-04-29", "2011-05-06", "2011-05-13", "2011-05-20", "2011-05-27", "2011-06-03", "2011-06-10", "2011-06-17", "2011-06-24", "2011-07-01", "2011-07-08", "2011-07-15", "2011-07-22", "2011-07-29", "2011-08-05", "2011-08-12", "2011-08-19", "2011-08-26", "2011-09-02", "2011-09-09", "2011-09-16", "2011-09-23", "2011-09-30", "2011-10-07", "2011-10-14", "2011-10-21", "2011-10-28", "2011-11-04", "2011-11-11", "2011-11-18", "2011-11-25", "2011-12-02", "2011-12-09", "2011-12-16", "2011-12-23", "2011-12-30", "2012-01-06", "2012-01-13", "2012-01-20", "2012-01-27", "2012-02-03", "2012-02-10", "2012-02-17", "2012-02-24", "2012-03-02", "2012-03-09", "2012-03-16", "2012-03-23", "2012-03-30", "2012-04-06", "2012-04-13", "2012-04-20", "2012-04-27", "2012-05-04", "2012-05-11", "2012-05-18", "2012-05-25", "2012-06-01", "2012-06-08", "2012-06-15", "2012-06-22", "2012-06-29", "2012-07-06", "2012-07-13", "2012-07-20", "2012-07-27", "2012-08-03", "2012-08-10", "2012-08-17", "2012-08-24", "2012-08-31", "2012-09-07", "2012-09-14", "2012-09-21", "2012-09-28", "2012-10-05", "2012-10-12", "2012-10-19", "2012-10-26"], [49.8, 48.3, 48.3, 44.0, 46.9, 45.9, 45.0, 44.1, 50.4, 47.4, 45.2, 44.7, 43.7, 48.5, 45.3, 45.1, 47.8, 50.2, 47.8, 47.6, 46.6, 48.9, 47.9, 46.2, 44.9, 44.6, 48.2, 46.5, 47.1, 45.9, 47.2, 45.6, 43.1, 41.4, 42.2, 45.1, 43.1, 43.1, 43.6, 45.8, 46.1, 45.1, 65.8, 49.9, 55.7, 61.8, 80.9, 40.4, 42.8, 40.7, 40.7, 39.6, 46.2, 47.3, 48.7, 44.1, 47.0, 44.6, 44.9, 42.9, 43.5, 45.9, 45.0, 48.7, 43.5, 46.9, 45.4, 44.0, 45.3, 48.8, 47.7, 47.4, 45.9, 47.6, 47.9, 45.5, 45.3, 43.7, 48.0, 46.2, 46.9, 47.4, 45.4, 46.8, 43.8, 42.7, 42.2, 47.2, 44.4, 45.8, 45.9, 48.7, 48.5, 46.4, 66.6, 49.4, 55.6, 60.1, 77.0, 46.0, 45.0, 42.0, 42.1, 39.8, 46.1, 50.0, 50.2, 45.8, 46.9, 47.5, 46.9, 45.0, 45.3, 53.5, 46.6, 45.1, 43.7, 47.1, 46.9, 46.8, 47.9, 48.3, 49.7, 48.4, 47.7, 46.6, 51.3, 46.1, 46.1, 44.1, 47.5, 47.4, 47.4, 47.4, 47.2, 48.3, 44.2, 44.4, 43.7, 47.6, 46.1, 45.1, 45.5]], "mo": [41.6, 47.4, 45.6, 46.2, 46.4, 47.9, 46.4, 47.2, 44.5, 45.0, 51.6, 57.7], "ty": [["A", "B", "C"], [20.0, 12.2, 9.5], [21.3, 13.3, 9.5]], "dp": [["Dept 92", "Dept 95", "Dept 38", "Dept 72", "Dept 90", "Dept 40", "Dept 2", "Dept 91"], [484.0, 449.0, 393.0, 306.0, 291.0, 289.0, 281.0, 217.0]], "hl": [["Dept 72", "Dept 6", "Dept 18", "Dept 55", "Dept 5", "Dept 14"], [101.0, 74.0, 72.0, 69.0, 58.0, 37.0]]};
+let charts=[];
+function build(){
+charts.forEach(c=>c.destroy());charts=[];
+const cs=getComputedStyle(document.documentElement),g=n=>cs.getPropertyValue(n).trim();
+const blue=g('--blue'),gold=g('--gold'),mute=g('--mute'),grid=g('--grid');
+Chart.defaults.color=mute;Chart.defaults.font.family='"IBM Plex Sans",system-ui,sans-serif';
+const ax=(t)=>({grid:{color:grid},border:{display:false},title:t?{display:true,text:t}:undefined});
+const mk=(id,cfg)=>charts.push(new Chart(document.getElementById(id),Object.assign({options:{responsive:true,maintainAspectRatio:false}},cfg)));
+mk('c1',{type:'line',data:{labels:D.wk[0],datasets:[{data:D.wk[1],borderColor:blue,borderWidth:2,pointRadius:0,tension:.2}]},
+ options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8}},y:Object.assign(ax('$M per week'),{beginAtZero:true})}}});
+const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+mk('c2',{type:'bar',data:{labels:M,datasets:[{data:D.mo,backgroundColor:D.mo.map((v,i)=>i>9?gold:blue)}]},
+ options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:ax()}}});
+mk('c3',{type:'bar',data:{labels:D.ty[0].map(t=>'Type '+t),datasets:[{label:'Normal week',data:D.ty[1],backgroundColor:blue},{label:'Holiday week',data:D.ty[2],backgroundColor:gold}]},
+ options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:ax()}}});
+mk('c4',{type:'bar',data:{labels:D.dp[0],datasets:[{data:D.dp[1],backgroundColor:blue}]},
+ options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:ax(),y:{grid:{display:false}}}}});
+mk('c5',{type:'bar',data:{labels:D.hl[0],datasets:[{data:D.hl[1],backgroundColor:gold}]},
+ options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:ax(),y:{grid:{display:false}}}}});
+}
+try{build()}catch(e){document.querySelector('.hero p').textContent='Charts could not load. Check your connection and reload.'}
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{try{build()}catch(e){}});
+</script></body></html>
