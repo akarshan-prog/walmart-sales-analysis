@@ -36,7 +36,7 @@ Kaggle: [Walmart Recruiting - Store Sales Forecasting](https://www.kaggle.com/c/
 ## Files
 - `walmart_analysis.sql`: 15 documented queries
 - `walmart.db`: cleaned SQLite database
-- `walmart_dashboard.html`: dashboard page
+- `index.html`: dashboard page
 - Live dashboard: link above
 
 ## Limitations
