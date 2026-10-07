@@ -2,7 +2,7 @@
 
 Analysis of weekly sales across 45 Walmart stores and 81 departments (Feb 2010 to Oct 2012) to find trends, seasonality and product performance.
 
-**Live dashboard:** https://claude.ai/artifact/VDKkCkQUpgeu8BbmuNfRPG
+**Live dashboard:** [https://claude.ai/artifact/VDKkCkQUpgeu8BbmuNfRPG](https://akarshan-prog.github.io/walmart-sales-analysis/)
 
 ## Tools
 SQLite, SQL (joins, aggregation, CASE, subqueries), Python (pandas) for loading and cleaning, Chart.js for the dashboard.
